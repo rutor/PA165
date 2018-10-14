@@ -2,7 +2,6 @@ package cz.muni.fi.pa165.currency;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-//import org.junit;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -17,6 +16,8 @@ public class MainXml {
         Currency targetCurrency = Currency.getInstance("CZK");
         BigDecimal amount = new BigDecimal(1);
         BigDecimal result = convertor.convert(sourceCurrency, targetCurrency, amount);
-        System.out.print(result.longValue());
+        System.out.println();
+        System.out.println(result.longValue());
+        System.out.println();
     }
 }

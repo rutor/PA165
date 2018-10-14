@@ -7,6 +7,8 @@
 
 
     <bean id = "ExchangeRateTable" class = "cz.muni.fi.pa165.currency.ExchangeRateTableImpl"></bean>
-    <bean id = "CurrencyConvertor" class = "cz.muni.fi.pa165.currency.CurrencyConvertorImpl"></bean>
+    <bean id = "CurrencyConvertor" class = "cz.muni.fi.pa165.currency.CurrencyConvertorImpl">
+    	<constructor-arg ref="ExchangeRateTable"/>
+    </bean>
 
 </beans>

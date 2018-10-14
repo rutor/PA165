@@ -14,7 +14,6 @@ import org.springframework.context.annotation.*;
  * @author petr.adamek@embedit.cz
  */
 @Named
-@Configuration
 public class CurrencyConvertorImpl implements CurrencyConvertor {
 
     private final ExchangeRateTable exchangeRateTable;
