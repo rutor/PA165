@@ -22,26 +22,13 @@ public class CurrencyConvertorImplTest {
 
     Currency czk = Currency.getInstance("CZK");
     Currency eur = Currency.getInstance("EUR");
-
-    @Before
-    public void init() throws Exception {
-        when(exchangeRateTable.getExchangeRate(any(Currency.class), any(Currency.class)))
-            .thenAnswer(inv -> {
-                if (inv.getArgument(0) == null) {
-                    throw new IllegalArgumentException("Null source");
-                }
-                if (inv.getArgument(1) == null) {
-                    throw new IllegalArgumentException("Null target");
-                }
-                if (inv.getArgument(0).equals(eur) && inv.getArgument(1).equals(czk)) {
-                    return new BigDecimal("25.00");
-                }
-                return null;
-            });
-    }
+    Currency usd = Currency.getInstance("USD");
 
     @Test
     public void testConvert() throws Exception {
+
+        when(exchangeRateTable.getExchangeRate(eur, czk)).thenReturn(new BigDecimal("25.00"));
+
         CurrencyConvertorImpl convertor = new CurrencyConvertorImpl(exchangeRateTable);
         BigDecimal result;
 
@@ -66,36 +53,41 @@ public class CurrencyConvertorImplTest {
     @Test(expected = IllegalArgumentException.class)
     public void testConvertWithNullSourceCurrency() {
         CurrencyConvertorImpl convertor = new CurrencyConvertorImpl(exchangeRateTable);
-        BigDecimal result = convertor.convert(null, czk, new BigDecimal("1"));
+        convertor.convert(null, czk, new BigDecimal("1"));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testConvertWithNullTargetCurrency() {
         CurrencyConvertorImpl convertor = new CurrencyConvertorImpl(exchangeRateTable);
-        BigDecimal result = convertor.convert(eur, null, new BigDecimal("1"));
+        convertor.convert(eur, null, new BigDecimal("1"));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testConvertWithNullSourceAmount() {
         CurrencyConvertorImpl convertor = new CurrencyConvertorImpl(exchangeRateTable);
-        BigDecimal result = convertor.convert(eur, czk, null);
+        convertor.convert(eur, czk, null);
     }
 
     @Test(expected = UnknownExchangeRateException.class)
-    public void testConvertWithUnknownCurrency() {
+    public void testConvertWithUnknownCurrency() throws ExternalServiceFailureException {
+        when(exchangeRateTable.getExchangeRate(usd, czk)).thenReturn(null);
+
         CurrencyConvertorImpl convertor = new CurrencyConvertorImpl(exchangeRateTable);
-        BigDecimal result = convertor.convert(Currency.getInstance("USD"), czk, new BigDecimal("1"));
+        convertor.convert(Currency.getInstance("USD"), czk, new BigDecimal("1"));
     }
 
-    @Test(expected=UnknownExchangeRateException.class)
+    @Test
     public void testConvertWithExternalServiceFailure() throws Exception {
-        reset(exchangeRateTable);
-        when(exchangeRateTable.getExchangeRate(any(Currency.class), any(Currency.class)))
-            .thenThrow(new ExternalServiceFailureException("No table found"));
+
+        ExternalServiceFailureException externalServiceFailureException = new ExternalServiceFailureException("error");
+
+        when(exchangeRateTable.getExchangeRate(eur, czk)).thenThrow(externalServiceFailureException);
+
         CurrencyConvertorImpl convertor = new CurrencyConvertorImpl(exchangeRateTable);
-        BigDecimal result;
 
-        result = convertor.convert(eur, czk, new BigDecimal("1"));
-        assertThat(result).isEqualTo("25.00");    }
-
+        assertThatExceptionOfType(UnknownExchangeRateException.class)
+                .isThrownBy(() -> convertor.convert(eur, czk, BigDecimal.ONE))
+                .withCause(externalServiceFailureException)
+                .withMessage("Error when looking up for exchange rate EUR -> CZK");
+    }
 }

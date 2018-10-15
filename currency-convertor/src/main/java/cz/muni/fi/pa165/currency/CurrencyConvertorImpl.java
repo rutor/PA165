@@ -41,7 +41,7 @@ public class CurrencyConvertorImpl implements CurrencyConvertor {
 	        return sourceAmount.multiply(ratio).setScale(2, RoundingMode.HALF_EVEN);
 	    } catch (ExternalServiceFailureException ex) {
 	    	logger.error(ex.getMessage());
-	    	throw new UnknownExchangeRateException(ex.getMessage());
+	    	throw new UnknownExchangeRateException("Error when looking up for exchange rate " + sourceCurrency + " -> " + targetCurrency, ex);
 	    }
     }
 
