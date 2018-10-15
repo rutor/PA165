@@ -22,7 +22,8 @@ public class MainJavaSe {
 		emf = Persistence.createEntityManagerFactory("default");
 		try {
 			// BEGIN YOUR CODE
-			task04();
+			//task04();
+                        task05();
 			// END YOUR CODE
 		} finally {
 			emf.close();
@@ -40,6 +41,16 @@ public class MainJavaSe {
 		// The code below is just testing code. Do not modify it
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
+                
+                Category cat;
+                cat = new Category();
+                cat.setName("Electronics");
+                em.persist(cat);
+                
+                cat = new Category();
+                cat.setName("Musical");
+                em.persist(cat);
+                
 		List<Category> categories = em.createQuery(
 				"select c from Category c order by c.name", Category.class)
 				.getResultList();
@@ -68,6 +79,13 @@ public class MainJavaSe {
 		// TODO under this line. create new EM and start new transaction. Merge
 		// the detached category
 		// into the context and change the name to "Electro"
+                
+                em = emf.createEntityManager();
+		em.getTransaction().begin();
+                em.merge(category);
+                category.setName("Electro");
+                em.getTransaction().commit();
+                em.close();
 
 
 		// The code below is just testing code. Do not modify it
