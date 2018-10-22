@@ -10,7 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -19,6 +19,14 @@ public class Category {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
+        
+        @ManyToMany(cascade = { CascadeType.ALL })
+        @JoinTable(
+            name = "Product_Category_Mapping", 
+            joinColumns = { @JoinColumn(name = "product_id", referencedColumnName="id") }, 
+            inverseJoinColumns = { @JoinColumn(name = "category_id", referencedColumnName="id") }
+        )
+        private Set<Product> products;
 	
 	@NotNull
 	@Column(nullable=false,unique=true)
@@ -26,13 +34,13 @@ public class Category {
 	
 
 	//TODO after you are done with task02 you can uncomment this methods
-//	public void addProduct(Product product) {
-//		this.products.add(product);
-//	}
-//
-//	public Set<Product> getProducts() {
-//		return Collections.unmodifiableSet(products);
-//	}
+	public void addProduct(Product product) {
+		this.products.add(product);
+	}
+
+	public Set<Product> getProducts() {
+		return Collections.unmodifiableSet(products);
+	}
 
 	public Category(Long categoryId) {
 		this.id = categoryId; 

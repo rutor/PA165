@@ -21,7 +21,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import cz.fi.muni.pa165.dto.Color;
@@ -35,6 +35,8 @@ public class Product {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
+        @ManyToMany(mappedBy = "products")
+        private Set<Category> categories;
 
 	@Lob
 	private byte[] image;
@@ -69,29 +71,19 @@ public class Product {
 
 
 
-	/**
-	 * TODO these two methods are here just to make Task04 compilable. After you are finished
-	 * with TASK 02 you should delete this empty method
-	 * @param kitchen
-	 */
-	public void addCategory(Category kitchen) {	
-	}
-	public List<Product> getCategories() {
-		return null;
-	}
 	//TODO after you are done with task02 you can uncomment this methods
-//	public void removeCategory(Category category)	{
-//		this.categories.remove(category);
-//	}
-//	
-//	public void addCategory(Category c) {
-//		categories.add(c);
-//		c.addProduct(this);
-//	}
-//
-//	public Set<Category> getCategories() {
-//		return Collections.unmodifiableSet(categories);
-//	}
+	public void removeCategory(Category category)	{
+		this.categories.remove(category);
+	}
+	
+	public void addCategory(Category c) {
+		categories.add(c);
+		c.addProduct(this);
+	}
+
+	public Set<Category> getCategories() {
+		return Collections.unmodifiableSet(categories);
+	}
 
 
 	public LocalDate getAddedDate() {
