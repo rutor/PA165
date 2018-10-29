@@ -140,4 +140,10 @@ public class Task02 extends AbstractTestNGSpringContextTests {
             em.getTransaction().commit();
             em.close();
         }
+
+    @Test//(expectedExceptions=ConstraintViolationException.class)
+    public void testDoesntSaveNullName() {
+	    Product p = new Product();
+	    p.setName(null);
+    }
 }

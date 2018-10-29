@@ -12,6 +12,7 @@ import java.util.List;
  * Created by Filip Nguyen on 9.10.17.
  */
 @Service
+@Transactional
 public class SeminarServiceImpl {
     @Autowired
     private ProductDao productDao;

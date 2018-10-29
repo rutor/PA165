@@ -36,14 +36,14 @@ public class Product {
 	private Long id;
 	
         @ManyToMany(mappedBy = "products")
-        private Set<Category> categories;
+        private Set<Category> categories = new HashSet<>();
 
 	@Lob
 	private byte[] image;
 
 	private String imageMimeType;
-	
 
+	@NotNull
 	private String name;
 	
 	/*
@@ -144,7 +144,7 @@ public class Product {
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(@NotNull  String name) {
 		this.name = name;
 	}
 

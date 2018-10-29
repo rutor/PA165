@@ -45,7 +45,8 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public void remove(Product p) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        p = em.merge(p);
+        em.remove(p);
     }
 
     @Override

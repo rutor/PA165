@@ -20,17 +20,17 @@ public class Category {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
         
-        @ManyToMany(cascade = { CascadeType.ALL })
+        @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
         @JoinTable(
             name = "Product_Category_Mapping", 
             joinColumns = { @JoinColumn(name = "product_id", referencedColumnName="id") }, 
             inverseJoinColumns = { @JoinColumn(name = "category_id", referencedColumnName="id") }
         )
-        private Set<Product> products;
+        private Set<Product> products = new HashSet<>();
 	
 	@NotNull
 	@Column(nullable=false,unique=true)
-	private String name;
+	private String name = "";
 	
 
 	//TODO after you are done with task02 you can uncomment this methods

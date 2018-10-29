@@ -14,7 +14,6 @@ import cz.fi.muni.pa165.entity.Product;
 @ContextConfiguration(classes = PersistenceSampleApplicationContext.class)
 public class Task03 extends AbstractTestNGSpringContextTests {
 
-	//TODO uncomment after you have created the DAO Impl
 	@Autowired
 	private SeminarServiceImpl productService;
 	
